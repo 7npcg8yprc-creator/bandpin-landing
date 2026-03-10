@@ -1,116 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BandPin</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    :root {
+      --bg: #0b0b10;
+      --card: #15151d;
+      --muted: #a1a1b3;
+      --text: #ffffff;
+      --line: #2a2a38;
+      --primary: #6d5dfc;
+      --primary-hover: #5a4be0;
+      --secondary: #22222d;
+      --secondary-hover: #2c2c39;
+    }
 
-<title>Open Band in BandPin</title>
+    * {
+      box-sizing: border-box;
+    }
 
-<style>
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:#0f0f12;
-  color:white;
-  text-align:center;
-}
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #0b0b10 0%, #11111a 100%);
+      color: var(--text);
+    }
 
-.container{
-  max-width:520px;
-  margin:auto;
-  padding:40px 20px;
-}
+    .wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
 
-.logo{
-  width:120px;
-  margin-bottom:20px;
-}
+    .card {
+      width: 100%;
+      max-width: 760px;
+      background: rgba(21, 21, 29, 0.96);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
 
-h1{
-  font-size:28px;
-  margin-bottom:10px;
-}
+    .cover {
+      width: 100%;
+      height: 260px;
+      background: #1b1b24 center center / cover no-repeat;
+      position: relative;
+    }
 
-.band{
-  font-size:20px;
-  color:#aaa;
-  margin-bottom:30px;
-}
+    .cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(11,11,16,0.9), rgba(11,11,16,0.15));
+    }
 
-.button{
-  display:block;
-  text-decoration:none;
-  background:#6c5ce7;
-  padding:16px;
-  margin:12px 0;
-  border-radius:12px;
-  color:white;
-  font-weight:600;
-}
+    .content {
+      position: relative;
+      padding: 0 24px 28px;
+      margin-top: -56px;
+      z-index: 1;
+    }
 
-.button.secondary{
-  background:#2d3436;
-}
+    .avatar {
+      width: 112px;
+      height: 112px;
+      border-radius: 18px;
+      border: 4px solid #15151d;
+      background: #20202b center center / cover no-repeat;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
 
-.footer{
-  margin-top:40px;
-  color:#666;
-  font-size:14px;
-}
-</style>
+    .top {
+      display: flex;
+      gap: 18px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
 
+    h1 {
+      margin: 10px 0 6px;
+      font-size: 34px;
+      line-height: 1.05;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .bio {
+      margin-top: 22px;
+      color: #e7e7ef;
+      line-height: 1.6;
+      font-size: 16px;
+      white-space: pre-wrap;
+    }
+
+    .buttons {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      display: block;
+      text-decoration: none;
+      text-align: center;
+      padding: 15px 18px;
+      border-radius: 14px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: white;
+      border: 1px solid var(--line);
+    }
+
+    .btn-secondary:hover {
+      background: var(--secondary-hover);
+    }
+
+    .footer {
+      margin-top: 18px;
+      text-align: center;
+      color: #7f7f92;
+      font-size: 13px;
+    }
+
+    .logo {
+      width: 90px;
+      opacity: 0.95;
+      margin-bottom: 6px;
+    }
+
+    .loading,
+    .error {
+      padding: 34px 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .verified {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 14px;
+      color: #66d9ff;
+      vertical-align: middle;
+    }
+
+    @media (max-width: 640px) {
+      .cover {
+        height: 200px;
+      }
+
+      .content {
+        padding: 0 18px 22px;
+      }
+
+      .avatar {
+        width: 88px;
+        height: 88px;
+        border-radius: 16px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <div class="card">
+      <div id="cover" class="cover"></div>
 
-<div class="container">
+      <div id="loading" class="loading">
+        <img src="/bandpin-logo.png" alt="BandPin" class="logo" />
+        <div>Loading band...</div>
+      </div>
 
-<img src="/bandpin-logo.png" class="logo">
+      <div id="error" class="error hidden">
+        <img src="/bandpin-logo.png" alt="BandPin" class="logo" />
+        <div id="errorText">Band not found.</div>
+      </div>
 
-<h1>Open this band in BandPin</h1>
+      <div id="content" class="content hidden">
+        <div class="top">
+          <div id="avatar" class="avatar"></div>
+          <div>
+            <h1>
+              <span id="bandName">Band name</span>
+              <span id="verified" class="verified hidden">✔ Verified</span>
+            </h1>
+            <div id="meta" class="meta"></div>
+          </div>
+        </div>
 
-<div id="bandName" class="band"></div>
+        <div id="bio" class="bio"></div>
 
-<a id="openApp" class="button">Open in BandPin</a>
+        <div class="buttons">
+          <a id="openApp" class="btn btn-primary" href="#">Open in BandPin</a>
+          <a class="btn btn-secondary" href="https://apps.apple.com">Download on the App Store</a>
+          <a class="btn btn-secondary" href="#">Get it on Google Play</a>
+        </div>
 
-<a class="button secondary" href="https://apps.apple.com">
-Download on the App Store
-</a>
+        <div class="footer">Discover bands near you with BandPin</div>
+      </div>
+    </div>
+  </div>
 
-<a class="button secondary" href="#">
-Get it on Google Play
-</a>
+  <script>
+    const SUPABASE_URL = "https://wfhxwosvluaoazyiboym.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmaHh3b3N2bHVhb2F6eWlib3ltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNzc4OTEsImV4cCI6MjA4Mjk1Mzg5MX0.0t8B9TvTph7rAsJyiSlMMbDqgjJMp6FITpsMy4X9-ps";
+    const DEFAULT_IMAGE = "https://via.placeholder.com/512.png?text=BandPin";
 
-<div class="footer">
-Discover bands near you with BandPin
-</div>
+    const params = new URLSearchParams(window.location.search);
+    const bandId = params.get("id");
 
-</div>
+    const loadingEl = document.getElementById("loading");
+    const errorEl = document.getElementById("error");
+    const errorTextEl = document.getElementById("errorText");
+    const contentEl = document.getElementById("content");
 
-<script>
+    function sanitizeImageUrl(url) {
+      const u = (url || "").trim();
+      if (!u) return DEFAULT_IMAGE;
+      const lower = u.toLowerCase();
+      if (lower.endsWith(".webp") || lower.includes(".webp?") || lower.includes("format=webp")) {
+        return DEFAULT_IMAGE;
+      }
+      return u;
+    }
 
-const params = new URLSearchParams(window.location.search)
-const slug = params.get("slug")
+    function showError(text) {
+      loadingEl.classList.add("hidden");
+      contentEl.classList.add("hidden");
+      errorEl.classList.remove("hidden");
+      errorTextEl.textContent = text;
+    }
 
-if(slug){
+    function showContent(band) {
+      const profileImage = sanitizeImageUrl(band.profile_picture);
+      const coverImage = sanitizeImageUrl(band.cover_image || band.profile_picture);
 
-  const bandName = slug
-  .replace(/-/g," ")
-  .replace(/\b\w/g,l=>l.toUpperCase())
+      document.getElementById("cover").style.backgroundImage = `url("${coverImage}")`;
+      document.getElementById("avatar").style.backgroundImage = `url("${profileImage}")`;
+      document.getElementById("bandName").textContent = band.name || "Unknown Band";
 
-  document.getElementById("bandName").innerText = bandName
+      if (band.verified) {
+        document.getElementById("verified").classList.remove("hidden");
+      }
 
-  document.getElementById("openApp").href =
-  "bandpin://band/" + slug
+      const metaParts = [];
+      if (band.genre) metaParts.push(band.genre);
+      if (band.city) metaParts.push(band.city);
+      else if (band.location) metaParts.push(band.location);
 
-}else{
+      document.getElementById("meta").textContent = metaParts.join(" • ");
+      document.getElementById("bio").textContent = band.bio || "No bio added yet.";
 
-  document.getElementById("bandName").innerText =
-  "Band not specified"
+      document.getElementById("openApp").href = `bandpin://band/${band.id}`;
 
-}
+      loadingEl.classList.add("hidden");
+      errorEl.classList.add("hidden");
+      contentEl.classList.remove("hidden");
+    }
 
-</script>
+    async function loadBand() {
+      if (!bandId) {
+        showError("No band ID in link.");
+        return;
+      }
 
+      try {
+        const url =
+          `${SUPABASE_URL}/rest/v1/bands` +
+          `?select=id,name,genre,bio,location,city,profile_picture,cover_image,verified` +
+          `&id=eq.${encodeURIComponent(bandId)}` +
+          `&limit=1`;
+
+        const response = await fetch(url, {
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+          }
+        });
+
+        if (!response.ok) {
+          showError("Could not load band.");
+          return;
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          showError("Band not found.");
+          return;
+        }
+
+        showContent(data[0]);
+      } catch (error) {
+        showError("Something went wrong while loading the band.");
+      }
+    }
+
+    loadBand();
+  </script>
 </body>
 </html>
